@@ -24,27 +24,7 @@ class _SplashAnimationState extends State<SplashAnimation>
     controller.addListener(() {
       if (controller.isCompleted) {
         Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const Destination();
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              // return FadeTransition(
-              //   opacity: animation,
-              //   child: child,
-              // );
-              final position = Tween<Offset>(
-                      begin: const Offset(0, -1), end: Offset.zero)
-                  .animate(
-                      CurvedAnimation(parent: animation, curve: Curves.ease));
-              return SlideTransition(
-                position: position,
-                child: child,
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
+          MyCustomRouteTranstion(route: const Destination())
         );
         Timer(const Duration(milliseconds: 500), () {
           controller.reset();
@@ -98,4 +78,27 @@ class Destination extends StatelessWidget {
   }
 }
 
-
+class MyCustomRouteTranstion extends PageRouteBuilder {
+  final Widget route;
+  MyCustomRouteTranstion({required this.route})
+      : super(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return route;
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // return FadeTransition(
+            //   opacity: animation,
+            //   child: child,
+            // );
+            final position =
+                Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero)
+                    .animate(
+                        CurvedAnimation(parent: animation, curve: Curves.ease));
+            return SlideTransition(
+              position: position,
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 500),
+        );
+}
